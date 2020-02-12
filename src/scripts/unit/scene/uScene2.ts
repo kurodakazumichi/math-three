@@ -1,9 +1,12 @@
 import uScene from '~/scripts/unit/scene/uScene';
 
 import sCamera from '~/scripts/system/sCamera';
-import sRender from '~/scripts/system/sRender';
-import { OrbitControls } from 'three-orbitcontrols-ts';
-import { PerspectiveCamera, Mesh, MeshNormalMaterial, SphereGeometry, GridHelper } from 'three';
+
+import sUnit from '~/scripts/system/sUnit';
+import uOrbitCamera from '~/scripts/unit/camera/uOrbitCamera';
+
+import uGrid from '~/scripts/unit/primitive/uGrid';
+import { UNIT_LINE } from '~/scripts/define';
 /******************************************************************************
  * シーン１
  *****************************************************************************/
@@ -15,21 +18,20 @@ export default class uScene2 extends uScene {
 
   init() {
 
-    const camera = new PerspectiveCamera(45, sRender.aspect);
+    const camera = new uOrbitCamera();
+    
     camera.position.set(0, 40, 100);
     sCamera.init(camera);
+    sUnit.add(UNIT_LINE.CAMERA, camera);
     
-    const controls = new OrbitControls(camera, sRender.canvas);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.4;
-  
-    const plane = new GridHelper(100, 10, 0x0000ff, 0x999999);
+    const plane = new uGrid(100, 10, 0x0000ff, 0x999999);
+    sUnit.add(UNIT_LINE.PRIMITIVE, plane);
     this.add(plane);
 
-    const geometry2 = new SphereGeometry(5, 32, 32);
-    const material2 = new MeshNormalMaterial();
-    const sphere = new Mesh(geometry2, material2);
-    this.add(sphere);
+    // const geometry2 = new SphereGeometry(5, 32, 32);
+    // const material2 = new MeshNormalMaterial();
+    // const sphere = new Mesh(geometry2, material2);
+    // this.add(sphere);
     return this;
   }
 }

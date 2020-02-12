@@ -1,21 +1,14 @@
-import { BoxGeometry, MeshNormalMaterial, Mesh, Material } from "three";
+import { BoxGeometry, MeshNormalMaterial, Mesh } from "three";
 
-import IUnit from '~/scripts/unit/IUnit';
-import { Object3D } from 'three';
+import uUnit from '~/scripts/unit/uUnit';
 
-
-(Object3D.prototype as  any)["kill"] = () => {}
-
-export default class uBox extends Mesh implements IUnit {
-
-  geometry:BoxGeometry;
-  material:Material;
+export default class uBox extends uUnit<Mesh> {
 
   constructor() {
-    super();
-    this.geometry = new BoxGeometry(10, 10, 10);
-    this.material = new MeshNormalMaterial();
-    
+    const geometry = new BoxGeometry(10, 10, 10);
+    const material = new MeshNormalMaterial();
+    const mesh = new Mesh(geometry, material);
+    super(mesh);
   }
 
   update() {

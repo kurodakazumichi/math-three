@@ -1,11 +1,12 @@
 import { GridHelper, Color } from "three";
 
-import IUnit from '~/scripts/unit/IUnit';
+import uUnit from '~/scripts/unit/uUnit';
 
-export default class uGrid extends GridHelper implements IUnit {
+export default class uGrid extends uUnit<GridHelper> {
 
   constructor(size:number, divisions:number, color1:number|Color|undefined, color2:number|Color|undefined) {
-    super(size, divisions, color1, color2);
+    const grid = new GridHelper(size, divisions, color1, color2);
+    super(grid);
   }
 
   update() {

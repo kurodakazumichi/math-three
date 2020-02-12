@@ -1,7 +1,8 @@
 import ISystem from '~/scripts/system/ISystem'
 import uScene1 from '../unit/scene/uScene1';
 import uScene2 from '../unit/scene/uScene2';
-import { Scene } from 'three';
+import uScene  from '~/scripts/unit/scene/uScene';
+
 export enum Type {
   None = -1,
   Scene1,
@@ -13,11 +14,11 @@ export enum Type {
  *****************************************************************************/
 class sScene implements ISystem {
 
-  private _actives:{type:Type, scene:Scene}[] = [];
+  private _actives:{type:Type, scene:uScene}[] = [];
 
   private reserved:Type = Type.None;
 
-  get actives():Scene[] {
+  get actives():uScene[] {
     return this._actives.map((active) => {
       return active.scene;
     })
@@ -62,7 +63,7 @@ class sScene implements ISystem {
     this._actives = [];
   }
 
-  private addActiveScene(type:Type, scene:Scene) {
+  private addActiveScene(type:Type, scene:uScene) {
     this._actives.push({type, scene});
   }
 

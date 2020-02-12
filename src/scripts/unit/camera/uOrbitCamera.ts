@@ -1,16 +1,17 @@
 import { PerspectiveCamera } from "three";
 import { OrbitControls } from 'three-orbitcontrols-ts';
 
-import IUnit from '~/scripts/unit/IUnit';
 import sRender from '~/scripts/system/sRender';
+import uCamera from "./uCamera";
 
-export default class uOrbitCamera extends PerspectiveCamera implements IUnit {
+export default class uOrbitCamera extends uCamera {
 
   private controls:OrbitControls;
 
   constructor() {
-    super(45, sRender.aspect);
-    this.controls =  new OrbitControls(this, sRender.canvas);
+    const camera = new PerspectiveCamera(45, sRender.aspect);
+    super(camera);
+    this.controls =  new OrbitControls(this.obj, sRender.canvas);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.4;
   }
@@ -18,6 +19,4 @@ export default class uOrbitCamera extends PerspectiveCamera implements IUnit {
   update() {
     this.controls.update();
   }
-
-  kill() {}
 }

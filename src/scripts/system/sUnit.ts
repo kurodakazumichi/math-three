@@ -1,5 +1,5 @@
 import ISystem from '~/scripts/system/ISystem';
-import IUnit from '~/scripts/unit/IUnit';
+import uUnit from '~/scripts/unit/uUnit';
 
 const LINE_COUNT = 10;
 
@@ -21,7 +21,7 @@ export enum Line {
  *****************************************************************************/
 class sUnit implements ISystem {
 
-  private lines:IUnit[][];
+  private lines:uUnit[][];
 
   constructor() {
     this.lines = [];
@@ -31,7 +31,7 @@ class sUnit implements ISystem {
     }
   }
 
-  add(line:number, unit:IUnit) {
+  add(line:number, unit:uUnit) {
     this.lines[line].push(unit);
   }
 
@@ -40,11 +40,11 @@ class sUnit implements ISystem {
   }
 
   private updateLines() {
-    this.lines.map((line:IUnit[]) => {
+    this.lines.map((line:uUnit[]) => {
       this.updateLine(line);
     })
   }
-  private updateLine(line:IUnit[]) {
+  private updateLine(line:uUnit[]) {
     line.map((unit) => {
       unit.update();
     })

@@ -1,10 +1,11 @@
-import uUnit from '~/scripts/unit/IUnit';
+import uUnit from '~/scripts/unit/uUnit';
 import { Scene } from 'three';
 
-export default class uScene extends Scene implements uUnit {
+export default class uScene extends uUnit<Scene> {
   
   constructor() {
-    super()
+    const scene = new Scene();
+    super(scene);
   }
 
   load() {}

@@ -33,7 +33,7 @@ class sRender {
   render(){
     sScene.actives.map((scene) => {
       if (!sCamera.main) return;
-      this.renderer?.render(scene, sCamera.main);
+      this.renderer?.render(scene.obj, sCamera.main.obj);
     })
   }
 
