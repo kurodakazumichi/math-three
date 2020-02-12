@@ -1,9 +1,11 @@
 import { GUI } from 'dat.gui';
 
 import sRender from '~/scripts/system/sRender';
-import sScene, { Type as SceneType } from '~/scripts/system/sScene';
+import sScene from '~/scripts/system/sScene';
 import sUnit from '~/scripts/system/sUnit';
 import sCamera from '~/scripts/system/sCamera';
+
+import SceneSettings from '~/scripts/settings/scene';
 
 /******************************************************************************
  * エントリーポイント
@@ -44,8 +46,10 @@ class App
 
   init(canvas:HTMLCanvasElement, width:number, height:number) {
     sRender.init(canvas, width, height);
-    sScene.init([SceneType.Scene1]);
+    sScene.init(SceneSettings);
     sCamera.init();
+
+    sScene.load("Scene1");
   }
 
   execute() {
@@ -70,7 +74,7 @@ function debug() {
       fullScreen:false,
     },
     scene: {
-      type:SceneType.Scene1,
+      type:"Scene1",
     }
   }
   const gui = new GUI;
@@ -83,9 +87,8 @@ function debug() {
 
   // Scene
   const scene = gui.addFolder("sScene");
-  scene.add(params.scene, "type", {"Scene1": SceneType.Scene1, "Scene2": SceneType.Scene2}).onChange((v) => {
-    console.log(typeof v);
-    sScene.load(Number(v));
+  scene.add(params.scene, "type", {"Scene1": "Scene1", "Scene2": "Scene2"}).onChange((v) => {
+    sScene.load(v);
   });
 
 }

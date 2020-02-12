@@ -20,6 +20,7 @@ export default class uScene1 extends uScene {
 
   init() {  
     const box = new uBox();
+    box.position.x = 40;
     sUnit.add(UNIT_LINE.PRIMITIVE, box);
     this.add(box);
 

@@ -19,6 +19,7 @@ export default class uScene2 extends uScene {
 
   init() {
     const sphere = new uSphere();
+    sphere.position.x = -40;
     sUnit.add(UNIT_LINE.PRIMITIVE, sphere);
     this.add(sphere);
     const plane = new uGrid(100, 10, 0x0000ff, 0x999999);

@@ -1,4 +1,4 @@
-import ISystem from '~/scripts/system/ISystem';
+import System from '~/scripts/system/System';
 import uUnit from '~/scripts/unit/uUnit';
 
 const LINE_COUNT = 10;
@@ -19,11 +19,12 @@ export enum Line {
 /******************************************************************************
  * ユニットシステム
  *****************************************************************************/
-class sUnit implements ISystem {
+class sUnit extends System {
 
   private lines:uUnit[][];
 
   constructor() {
+    super();
     this.lines = [];
 
     for(let i = 0; i < LINE_COUNT; ++i) {

@@ -1,11 +1,12 @@
 import { WebGLRenderer, Vector2 } from 'three';
 import sCamera from '~/scripts/system/sCamera';
 import sScene from '~/scripts/system/sScene';
+import System from '~/scripts/system/System';
 
 /******************************************************************************
  * 描画システム
  *****************************************************************************/
-class sRender {
+class sRender extends System {
 
   private renderer:WebGLRenderer|null = null;
   
@@ -14,6 +15,7 @@ class sRender {
   BASE_HEIGHT:number;
 
   constructor() {
+    super();
     this.BASE_WIDTH = this.BASE_HEIGHT = 0;
   }
 
@@ -27,6 +29,8 @@ class sRender {
     this.renderer = new WebGLRenderer({canvas});
     this.resize(width, height);
     this.renderer.setClearColor(0xf0f0f0, 1);
+
+    this.renderer.autoClear = false;
   }
 
   /** 更新 */
@@ -64,7 +68,8 @@ class sRender {
 
   /** 描画 */
   render(){
-    sScene.actives.map((scene) => {
+    this.renderer?.clear(true, true, true);
+    sScene.activeScenes.map((scene) => {
       if (!sCamera.main) return;
       this.renderer?.render(scene.obj, sCamera.main.obj);
     })
