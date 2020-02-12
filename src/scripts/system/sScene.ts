@@ -181,6 +181,8 @@ class sScene extends System {
     this.reserved.unload.map((name) => {
       this.removeScene(name);
     });
+
+    this.reserved.unload = [];
   }
 
   /** 
