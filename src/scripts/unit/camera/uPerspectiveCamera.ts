@@ -1,8 +1,10 @@
 import { PerspectiveCamera } from "three";
-
 import sRender from '~/scripts/system/sRender';
 import uCamera from "~/scripts/unit/camera/uCamera";
 
+/******************************************************************************
+ * PerspectiveCamera
+ *****************************************************************************/
 export default class uPerspectiveCamera extends uCamera<PerspectiveCamera> {
 
   constructor() {
