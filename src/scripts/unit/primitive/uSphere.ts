@@ -2,7 +2,7 @@ import { SphereGeometry, MeshNormalMaterial, Mesh } from "three";
 
 import uUnit from '~/scripts/unit/uUnit';
 
-export default class uBox extends uUnit<Mesh> {
+export default class uSphere extends uUnit<Mesh> {
 
   constructor() {
     const geometry = new SphereGeometry(5, 10, 10);

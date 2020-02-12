@@ -33,7 +33,16 @@ class sUnit extends System {
   }
 
   add(line:number, unit:uUnit) {
+    unit.unitLine = line;
     this.lines[line].push(unit);
+  }
+  remove(unit:uUnit) {
+    const found = this.lines[unit.unitLine].findIndex((u) => {
+      return u === unit;
+    })
+    if (found ===  -1) return;
+    
+    this.lines[unit.unitLine].splice(found, 1);
   }
 
   update() {
@@ -50,6 +59,8 @@ class sUnit extends System {
       unit.update();
     })
   }
+
+
 
 }
 

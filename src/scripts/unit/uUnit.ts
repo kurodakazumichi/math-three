@@ -1,5 +1,5 @@
 import { Object3D } from 'three';
-
+import sUnit from '~/scripts/system/sUnit';
 /******************************************************************************
  * 全Unitの基底クラスでありTHREE.Object3Dを包括するベースクラス
  * 
@@ -15,6 +15,8 @@ export default class uUnit<T extends Object3D = Object3D> {
    * THREE.Object3D系列のインスタンスを保持する
    */
   private _obj:T|null;
+
+  unitLine:number = -1;
 
   get obj() {
     return this._obj as T;
@@ -34,6 +36,7 @@ export default class uUnit<T extends Object3D = Object3D> {
   /** デストラクタに相等 */
   dispose() {
     this._obj = null;
+    sUnit.remove(this);
   }
 
   /**
@@ -55,4 +58,5 @@ export default class uUnit<T extends Object3D = Object3D> {
     return this;
   }
 
+  
 }

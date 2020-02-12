@@ -1,7 +1,7 @@
 import uScene from '~/scripts/unit/scene/uScene';
 
 
-
+import sCamera from '~/scripts/system/sCamera';
 import sUnit from '~/scripts/system/sUnit';
 
 import uSphere from '~/scripts/unit/primitive/uSphere';
@@ -18,6 +18,7 @@ export default class uScene2 extends uScene {
   }
 
   init() {
+    sCamera.main.position.set(0, 40, 100);
     const sphere = new uSphere();
     sphere.position.x = -40;
     sUnit.add(UNIT_LINE.PRIMITIVE, sphere);
