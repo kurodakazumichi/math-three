@@ -4,55 +4,75 @@ import sRender from '~/scripts/system/sRender';
 import sScene, { Type as SceneType } from '~/scripts/system/sScene';
 import sUnit from '~/scripts/system/sUnit';
 
-class App {
+/******************************************************************************
+ * エントリーポイント
+ *****************************************************************************/
+window.addEventListener('load', init);
+
+function init() 
+{
+  // canvas取得
+  const canvas = document.querySelector<HTMLCanvasElement>("#myCanvas");
+
+  if (!canvas) {
+    console.log("canvas not found.");
+    return;
+  }
+
+  // デバッグ用
+  debug();
+
+  // 基本サイズ定義
+  const width = 960;
+  const height = 540;
+
+  // アプリケーション実行
+  const app = new App();
+  app.init(canvas, width, height);
+  app.execute();
+}
+
+/******************************************************************************
+ * アプリケーション
+ *****************************************************************************/
+class App 
+{
   constructor() {
     this.execute = this.execute.bind(this);
   }
 
-  init() {
-    const width = 960;
-    const height = 540;
-  
-    const canvas = document.querySelector<HTMLCanvasElement>("#myCanvas");
-  
-    if (!canvas) {
-      console.log("canvas not found.");
-      return;
-    }
-  
-  
+  init(canvas:HTMLCanvasElement, width:number, height:number) {
     sRender.init(canvas, width, height);
-
     sScene.load(SceneType.Scene1);
   }
 
   execute() {
+    // 更新
     sScene.update();
     sUnit.update();
+
+    // 描画
     sRender.render();
 
     requestAnimationFrame(this.execute);
   }
 }
-window.addEventListener('load', init);
 
-function init() {
-
-
-  const gui = new GUI;
+/******************************************************************************
+ * GUI
+ *****************************************************************************/
+function debug() {
 
   const params = {
-    scene: false
-  }
-  gui.add(params, "scene").onChange((value) => {
-    if (value) {
-      sScene.load(SceneType.Scene2)
-    } else {
-      sScene.load(SceneType.Scene1)
+    render:{
+      fullScreen:false,
     }
-  });
+  }
+  const gui = new GUI;
 
-  const app = new App();
-  app.init();
-  app.execute();
+  // Render
+  const render = gui.addFolder("sRender");
+  render.add(params.render, "fullScreen").onChange((v) => {
+    sRender.fullScreen(v);
+  })
 }
