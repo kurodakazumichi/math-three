@@ -49,7 +49,7 @@ class App
     sScene.init(SceneSettings);
     sCamera.init();
 
-    sScene.load("Scene1");
+    sScene.loadSceneBy("Scene1");
   }
 
   execute() {
@@ -88,7 +88,7 @@ function debug() {
   // Scene
   const scene = gui.addFolder("sScene");
   scene.add(params.scene, "type", {"Scene1": "Scene1", "Scene2": "Scene2"}).onChange((v) => {
-    sScene.load(v);
+    sScene.loadSceneBy(v);
   });
 
 }
