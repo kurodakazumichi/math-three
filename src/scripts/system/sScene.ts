@@ -1,0 +1,91 @@
+import ISystem from '~/scripts/system/ISystem'
+import uScene1 from '../unit/scene/uScene1';
+import uScene2 from '../unit/scene/uScene2';
+import { Scene } from 'three';
+export enum Type {
+  None = -1,
+  Scene1,
+  Scene2,
+}
+
+/******************************************************************************
+ * シーンシステム
+ *****************************************************************************/
+class sScene implements ISystem {
+
+  private _actives:{type:Type, scene:Scene}[] = [];
+
+  private reserved:Type = Type.None;
+
+  get actives():Scene[] {
+    return this._actives.map((active) => {
+      return active.scene;
+    })
+  }
+
+  load(sceneType:Type) {
+    this.reserved = sceneType;
+  }
+
+  get isReserved() {
+    return (this.reserved !== Type.None);
+  }
+
+
+  update() {
+
+    if (!this.isReserved) return;
+    
+    if (this.isAlreadyActive(this.reserved)) {
+      console.warn(`the specified scene(type ${this.reserved}) is already active.`);
+      return;
+    }
+    
+    const scene = this.createScene(this.reserved);
+
+
+    
+    if (scene) {
+      this.disposeAll();
+      scene.init();
+      this.addActiveScene(this.reserved, scene);
+      this.reserved = Type.None;
+    }
+
+  }
+
+  private disposeAll() {
+    this.actives.map((scene) => {
+      scene.dispose();
+    });
+
+    this._actives = [];
+  }
+
+  private addActiveScene(type:Type, scene:Scene) {
+    this._actives.push({type, scene});
+  }
+
+  private createScene(type:Type){
+  
+
+    switch(type) {
+      case Type.Scene1: return new uScene1();
+      case Type.Scene2: return new uScene2();
+      default: return null;
+    }
+
+  }
+
+  isAlreadyActive(type:Type) {
+    const found = this._actives.some((active) => {
+      return active.type === type;
+    })
+
+    return found;
+  }
+
+}
+
+const instance = new sScene();
+export default instance;
