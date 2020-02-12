@@ -4,12 +4,10 @@ import { Scene } from 'three';
 export default class uScene extends uUnit<Scene> {
   
   constructor() {
-    const scene = new Scene();
-    super(scene);
+    super(new Scene());
   }
 
   load() {}
   init() { return this; }
   update() {}
-  kill() {}
 }

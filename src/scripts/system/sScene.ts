@@ -24,6 +24,18 @@ class sScene implements ISystem {
     })
   }
 
+  init(types:Type[]) {
+    types.map((type) => {
+      const scene = this.createScene(type);
+      
+      if(scene) {
+        scene.init();
+        this.addActiveScene(type, scene);
+      }
+
+    })
+  }
+
   load(sceneType:Type) {
     this.reserved = sceneType;
   }
@@ -34,7 +46,6 @@ class sScene implements ISystem {
 
 
   update() {
-
     if (!this.isReserved) return;
     
     if (this.isAlreadyActive(this.reserved)) {
@@ -44,14 +55,14 @@ class sScene implements ISystem {
     
     const scene = this.createScene(this.reserved);
 
-
-    
     if (scene) {
       this.disposeAll();
       scene.init();
       this.addActiveScene(this.reserved, scene);
-      this.reserved = Type.None;
+      
     }
+
+    this.reserved = Type.None;
 
   }
 
@@ -68,8 +79,6 @@ class sScene implements ISystem {
   }
 
   private createScene(type:Type){
-  
-
     switch(type) {
       case Type.Scene1: return new uScene1();
       case Type.Scene2: return new uScene2();

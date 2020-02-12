@@ -1,6 +1,9 @@
 import ISystem from '~/scripts/system/ISystem';
 import uCamera from '~/scripts/unit/camera/uCamera';
 
+import uOrbitCamera from '~/scripts/unit/camera/uOrbitCamera';
+import { UNIT_LINE } from '~/scripts/define';
+import sUnit from '~/scripts/system/sUnit';
 /******************************************************************************
  * カメラシステム
  *****************************************************************************/
@@ -9,11 +12,13 @@ class sCamera implements ISystem {
   private mainCamera:uCamera|null = null;
 
   constructor() {
-    
+
   }
 
-  init(camera:uCamera) {
-    this.mainCamera = camera;
+  init() {
+    this.mainCamera = new uOrbitCamera();
+    this.mainCamera.position.set(0, 40, 100);
+    sUnit.add(UNIT_LINE.CAMERA, this.mainCamera);
   }
 
   get main() {

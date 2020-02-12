@@ -3,6 +3,7 @@ import { GUI } from 'dat.gui';
 import sRender from '~/scripts/system/sRender';
 import sScene, { Type as SceneType } from '~/scripts/system/sScene';
 import sUnit from '~/scripts/system/sUnit';
+import sCamera from '~/scripts/system/sCamera';
 
 /******************************************************************************
  * エントリーポイント
@@ -43,7 +44,8 @@ class App
 
   init(canvas:HTMLCanvasElement, width:number, height:number) {
     sRender.init(canvas, width, height);
-    sScene.load(SceneType.Scene1);
+    sScene.init([SceneType.Scene1]);
+    sCamera.init();
   }
 
   execute() {
@@ -66,6 +68,9 @@ function debug() {
   const params = {
     render:{
       fullScreen:false,
+    },
+    scene: {
+      type:SceneType.Scene1,
     }
   }
   const gui = new GUI;
@@ -75,4 +80,12 @@ function debug() {
   render.add(params.render, "fullScreen").onChange((v) => {
     sRender.fullScreen(v);
   })
+
+  // Scene
+  const scene = gui.addFolder("sScene");
+  scene.add(params.scene, "type", {"Scene1": SceneType.Scene1, "Scene2": SceneType.Scene2}).onChange((v) => {
+    console.log(typeof v);
+    sScene.load(Number(v));
+  });
+
 }

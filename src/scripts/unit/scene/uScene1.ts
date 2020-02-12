@@ -5,7 +5,6 @@ import sCamera from '~/scripts/system/sCamera';
 import sUnit from '~/scripts/system/sUnit';
 
 
-import uOrbitCamera from '~/scripts/unit/camera/uOrbitCamera';
 import uBox from '~/scripts/unit/primitive/uBox';
 import uGrid from '~/scripts/unit/primitive/uGrid';
 import { UNIT_LINE } from '~/scripts/define';
@@ -19,13 +18,7 @@ export default class uScene1 extends uScene {
     super();
   }
 
-  init() {
-    const camera = new uOrbitCamera();
-    
-    camera.position.set(0, 40, 100);
-    sCamera.init(camera);
-    sUnit.add(UNIT_LINE.CAMERA, camera);
-  
+  init() {  
     const box = new uBox();
     sUnit.add(UNIT_LINE.PRIMITIVE, box);
     this.add(box);
@@ -35,6 +28,5 @@ export default class uScene1 extends uScene {
     this.add(plane);
     
     return this;
-
   }
 }
