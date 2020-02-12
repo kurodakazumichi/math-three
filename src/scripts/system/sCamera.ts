@@ -1,24 +1,26 @@
 import ISystem from '~/scripts/system/ISystem';
-import { Camera } from 'three';
+import uCamera from '~/scripts/unit/camera/uCamera';
 
 /******************************************************************************
  * カメラシステム
  *****************************************************************************/
 class sCamera implements ISystem {
 
-  private mainCamera:Camera|null = null;
+  private mainCamera:uCamera|null = null;
 
   constructor() {
     
   }
 
-  init(camera:Camera) {
+  init(camera:uCamera) {
     this.mainCamera = camera;
   }
 
   get main() {
     return this.mainCamera;
   }
+
+  
 
   update(){}
 }
