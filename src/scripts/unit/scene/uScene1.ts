@@ -1,6 +1,5 @@
 import uScene from '~/scripts/unit/scene/uScene';
-import sCamera from '~/scripts/system/sCamera';
-
+import { sCamera } from '~/scripts/system'
 import uBox from '~/scripts/unit/primitive/uBox';
 import uGrid from '~/scripts/unit/primitive/uGrid';
 import { UNIT_LINE } from '~/scripts/system/sUnit';
@@ -16,7 +15,7 @@ export default class uScene1 extends uScene {
     super();
     this.enter(UNIT_LINE.SCENE);
   }
-
+  
   init() {
     sCamera.main.position.set(0, 40, 100);
 
@@ -38,6 +37,7 @@ export default class uScene1 extends uScene {
       material.linewidth = 10;
       return new Line(geometry, material);
     })()
+    
     this.obj.add(line);
     
     
@@ -47,7 +47,6 @@ export default class uScene1 extends uScene {
   private timer:number = 0;
   update() {
     this.timer++;
-
     if (this.timer % 100 !== 0) return;
 
     if (!this.box) return;
