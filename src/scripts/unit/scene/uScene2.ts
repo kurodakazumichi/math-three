@@ -18,10 +18,10 @@ export default class uScene2 extends uScene {
 
   init() {
     sCamera.main.position.set(0, 40, 100);
-    const sphere = new uSphere().entry(UNIT_LINE.PRIMITIVE, this);
+    const sphere = new uSphere().enter(UNIT_LINE.PRIMITIVE, this);
     sphere.position.x = -40;
 
-    new uGrid(100, 10, 0x0000ff, 0x999999).entry(UNIT_LINE.PRIMITIVE, this);
+    new uGrid(100, 10, 0x0000ff, 0x999999).enter(UNIT_LINE.PRIMITIVE, this);
 
     return this;
   }

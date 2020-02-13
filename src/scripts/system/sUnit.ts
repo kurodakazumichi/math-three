@@ -1,8 +1,14 @@
 import System from '~/scripts/system/System';
 import uUnit from '~/scripts/unit/uUnit';
 
+/******************************************************************************
+ * 定数
+ *****************************************************************************/
 const LINE_COUNT = 10;
 
+/******************************************************************************
+ * Enum
+ *****************************************************************************/
 export enum UNIT_LINE {
   NONE      = -1,
   SCENE     = 0,
@@ -22,23 +28,24 @@ export enum UNIT_LINE {
  *****************************************************************************/
 class sUnit extends System {
 
-  private lines:uUnit[][];
-
   constructor() {
     super();
-    this.lines = [];
-
-    for(let i = 0; i < LINE_COUNT; ++i) {
-      this.lines.push([]);
-    }
+    this.lines = this.createLines()
   }
 
-  add(line:number, unit:uUnit) {
-    this.lines[line].push(unit);
+  //---------------------------------------------------------------------------
+  // Public メソッド
+  //---------------------------------------------------------------------------
+
+  add(lineNo:number, unit:uUnit) 
+  {
+    if (!this.isEnableAsLineNo(lineNo)) return;
+    this.lines[lineNo].push(unit);
   }
 
   remove(unit:uUnit, lineNo:number) {
-    if (lineNo < 0) return;
+    if (!this.isEnableAsLineNo(lineNo)) return;
+    
     const found = this.lines[lineNo].findIndex((u) => {
       return u === unit;
     })
@@ -48,21 +55,45 @@ class sUnit extends System {
   }
 
   update() {
-    this.updateLines();
-  }
-
-  private updateLines() {
     this.lines.map((line:uUnit[]) => {
       this.updateLine(line);
     })
   }
+
+  //---------------------------------------------------------------------------
+  // Private 変数
+  //---------------------------------------------------------------------------
+
+  private lines:uUnit[][];
+
+  //---------------------------------------------------------------------------
+  // Private メソッド
+  //---------------------------------------------------------------------------
+
+  /** 定数LINE_COUNTの数だけユニットを登録するためのラインを生成する */
+  private createLines() 
+  {
+    const lines = [];
+
+    for(let i = 0; i < LINE_COUNT; ++i) {
+      lines.push([]);
+    }
+
+    return lines;
+  }
+
   private updateLine(line:uUnit[]) {
     line.map((unit) => {
       unit.update();
     })
   }
 
-
+  /** 指定された番号がライン番号として有効範囲である */
+  private isEnableAsLineNo(no:number) {
+    if (no < 0) return false;
+    if (LINE_COUNT <= no) return false;
+    return true;
+  }
 
 }
 

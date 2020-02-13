@@ -17,7 +17,7 @@ class sCamera extends System {
   }
 
   init() {
-    this.mainCamera = new uOrbitCamera().entry(UNIT_LINE.CAMERA);
+    this.mainCamera = new uOrbitCamera().enter(UNIT_LINE.CAMERA);
   }
 
 

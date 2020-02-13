@@ -15,6 +15,8 @@ export default class uUnit<T extends Object3D = Object3D> {
 
   constructor(obj:T) {
     this._obj = obj;
+    this.belongingLineNo = UNIT_LINE.NONE;
+    this.belongingScene  = null;
   }
 
   //---------------------------------------------------------------------------
@@ -28,6 +30,25 @@ export default class uUnit<T extends Object3D = Object3D> {
   get obj() {
     return this._obj as T;
   }
+  
+  /** ラインに所属している */
+  get isBelongedInLine() {
+    return (this.belongingLineNo !== UNIT_LINE.NONE);
+  }
+
+  /** シーンに所属している */
+  get isBelonedInScene() {
+    return (this.belongingScene !== null); 
+  }
+
+  /** 独立(ラインにもシーンにも属していない)している */
+  get isIndependent() {
+    return (
+      !this.isBelonedInScene
+      &&
+      !this.isBelongedInLine
+    );
+  }
 
   //---------------------------------------------------------------------------
   // Public メソッド
@@ -40,7 +61,7 @@ export default class uUnit<T extends Object3D = Object3D> {
   update(){}
 
   /** sUnitとsceneに登録する */
-  entry(lineNo:number, scene:uScene|null = null) 
+  enter(lineNo:number, scene:uScene|null = null) 
   {
     // 既に登録されてるかもしれないので一度exitする。
     this.exit();
@@ -112,10 +133,8 @@ export default class uUnit<T extends Object3D = Object3D> {
   private _obj:T|null;
 
   /** 所属するsUnitのLINE番号 */
-  private belongingLineNo:number = UNIT_LINE.NONE;
+  private belongingLineNo:number;
 
   /** 所属するシーン */
-  private belongingScene:uScene|null = null;
-
-
+  private belongingScene:uScene|null;
 }

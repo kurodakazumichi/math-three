@@ -14,6 +14,7 @@ export default class uScene1 extends uScene {
   
   constructor() {
     super();
+    this.enter(UNIT_LINE.SCENE);
   }
 
   init() {
@@ -21,10 +22,11 @@ export default class uScene1 extends uScene {
 
     const box = new uBox();
     box.position.x = 40;
-    box.entry(UNIT_LINE.PRIMITIVE, this);
+    box.enter(UNIT_LINE.PRIMITIVE, this);
+    this.box = box;
 
     const plane = new uGrid(100, 10, 0xff0000, 0x999999);
-    plane.entry(UNIT_LINE.PRIMITIVE, this);
+    plane.enter(UNIT_LINE.PRIMITIVE, this);
 
     const line = (() => {
       const material = new LineBasicMaterial({color:0x0000ff});
@@ -40,5 +42,28 @@ export default class uScene1 extends uScene {
     
     
     return this;
+  }
+  private box:uBox|null = null;
+  private timer:number = 0;
+  update() {
+    this.timer++;
+
+    if (this.timer % 100 !== 0) return;
+
+    if (!this.box) return;
+
+    if (this.box.isIndependent) {
+      this.box.enter(UNIT_LINE.PRIMITIVE, this);
+    } else {
+      this.box.exit();
+    }
+    if (this.timer === 200) {
+      this.box?.enter(UNIT_LINE.PRIMITIVE, this);
+    }
+  }
+
+  dispose() {
+    super.dispose();
+    this.box = null;
   }
 }
