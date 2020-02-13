@@ -4,6 +4,7 @@ import sRender from '~/scripts/system/sRender';
 import sScene from '~/scripts/system/sScene';
 import sUnit from '~/scripts/system/sUnit';
 import sCamera from '~/scripts/system/sCamera';
+import sClock from '~/scripts/system/sClock';
 
 import SceneSettings from '~/scripts/settings/scene';
 
@@ -48,12 +49,14 @@ class App
     sRender.init(canvas, width, height);
     sScene.init(SceneSettings);
     sCamera.init();
+    sClock.init();
 
     sScene.loadSceneBy("Scene1");
   }
 
   execute() {
     // 更新
+    sClock.update();
     sScene.update();
     sUnit.update();
 
