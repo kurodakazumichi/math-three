@@ -1,5 +1,6 @@
 import System from '~/scripts/system/System';
 import uUnit from '~/scripts/unit/uUnit';
+import uScene from '../unit/scene/uScene';
 
 const LINE_COUNT = 10;
 
@@ -33,10 +34,11 @@ class sUnit extends System {
   }
 
   add(line:number, unit:uUnit) {
-    unit.unitLine = line;
     this.lines[line].push(unit);
   }
+
   remove(unit:uUnit) {
+    if (unit.unitLine < 0) return;
     const found = this.lines[unit.unitLine].findIndex((u) => {
       return u === unit;
     })

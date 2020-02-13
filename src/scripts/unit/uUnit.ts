@@ -1,5 +1,7 @@
 import { Object3D } from 'three';
 import sUnit from '~/scripts/system/sUnit';
+import uScene from './scene/uScene';
+
 /******************************************************************************
  * 全Unitの基底クラスでありTHREE.Object3Dを包括するベースクラス
  * 
@@ -18,6 +20,8 @@ export default class uUnit<T extends Object3D = Object3D> {
 
   unitLine:number = -1;
 
+  scene:uScene|null = null;
+
   get obj() {
     return this._obj as T;
   }
@@ -33,9 +37,38 @@ export default class uUnit<T extends Object3D = Object3D> {
   /** 毎フレームコールされる更新処理 */
   update(){}
 
+  /** sUnitとsceneに登録する */
+  entry(lineNo:number, scene:uScene|null = null) {
+
+    // 既に登録されてるかもしれないので一度exitする。
+    this.exit();
+
+    sUnit.add(lineNo, this);
+    this.unitLine = lineNo;
+
+    if(scene) {
+      this.scene = scene;
+      this.scene.add(this);
+    }
+    return this;
+  }
+
+  /** sUnitとsceneから抜ける */
+  exit() {
+    sUnit.remove(this);
+
+    if(this.scene) {
+      this.scene.remove(this);
+    }
+    this.unitLine = -1;
+    this.scene = null;
+    return this;
+  }
+
   /** デストラクタに相等 */
   dispose() {
     this._obj = null;
+    this.scene = null;
     sUnit.remove(this);
   }
 
@@ -58,5 +91,12 @@ export default class uUnit<T extends Object3D = Object3D> {
     return this;
   }
 
-  
+  remove<T extends Object3D>(...units:uUnit<T>[]) {
+    const objects = units.map((unit) => {
+      return unit.obj;
+    })
+    this.obj.remove(...objects);
+    return this;
+  }
+
 }

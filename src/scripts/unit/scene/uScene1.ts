@@ -22,12 +22,10 @@ export default class uScene1 extends uScene {
 
     const box = new uBox();
     box.position.x = 40;
-    sUnit.add(UNIT_LINE.PRIMITIVE, box);
-    this.add(box);
+    box.entry(UNIT_LINE.PRIMITIVE, this);
 
     const plane = new uGrid(100, 10, 0xff0000, 0x999999);
-    sUnit.add(UNIT_LINE.PRIMITIVE, plane);
-    this.add(plane);
+    plane.entry(UNIT_LINE.PRIMITIVE, this);
 
     const line = (() => {
       const material = new LineBasicMaterial({color:0x0000ff});

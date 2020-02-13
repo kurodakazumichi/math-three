@@ -2,7 +2,6 @@ import System from '~/scripts/system/System';
 import uCamera from '~/scripts/unit/camera/uCamera';
 import uOrbitCamera from '~/scripts/unit/camera/uOrbitCamera';
 import { UNIT_LINE } from '~/scripts/define';
-import sUnit from '~/scripts/system/sUnit';
 
 /******************************************************************************
  * カメラシステム
@@ -18,8 +17,7 @@ class sCamera extends System {
   }
 
   init() {
-    this.mainCamera = new uOrbitCamera();
-    sUnit.add(UNIT_LINE.CAMERA, this.mainCamera);
+    this.mainCamera = new uOrbitCamera().entry(UNIT_LINE.CAMERA);
   }
 
 
