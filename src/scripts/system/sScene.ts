@@ -84,6 +84,10 @@ class sScene extends System {
     this.status.unloads.push(sceneName);
   }
 
+  getSceneBy(sceneName:string) {
+    return this.scenes.getSceneBy(sceneName);
+  }
+
   //---------------------------------------------------------------------------
   // Private 変数
   //---------------------------------------------------------------------------
@@ -137,7 +141,7 @@ class sScene extends System {
     // 既存のシーンを破棄
     if (singleScene) {
       this.scenes.removeAll();
-      this.scenes.add(sceneName, singleScene.init(), true);
+      this.scenes.add(sceneName, singleScene, true);
     }
   }
 
@@ -151,7 +155,7 @@ class sScene extends System {
       const additiveScene = this.settings.createSceneBy(name);
 
       if (additiveScene) {
-        this.scenes.add(name, additiveScene.init());
+        this.scenes.add(name, additiveScene);
       }
     })
 
@@ -212,10 +216,6 @@ class SceneSettings {
  *****************************************************************************/
 class ReservationStatus 
 {
-  private _single:string;
-  private _additives:string[];
-  private _unloads:string[];
-
   constructor() {
     this._single = "";
     this._additives = [];
@@ -223,12 +223,15 @@ class ReservationStatus
   }
 
   //---------------------------------------------------------------------------
+  // Public プロパティ
+
   get single() {
     return this._single;
   }
 
   set single(v) {
-    // シングルロードの場合は一度全ての予約をクリアしておく
+    // シングルロードの場合は既存シーンを全て破棄したうえでロードするので
+    // 変な動きにならないように現状設定されてる予約情報もクリアしておく
     this.clear();
     this._single = v;
   }
@@ -242,6 +245,9 @@ class ReservationStatus
   }
 
   //---------------------------------------------------------------------------
+  // Public メソッド
+
+  //---------------------------------------------------------------------------
   canAddUnloadReservation(_sceneName:string) 
   {
     // ロード予約がある場合はどのみち全シーン消されるのでアンロードはスキップしてもいい
@@ -252,10 +258,10 @@ class ReservationStatus
   //---------------------------------------------------------------------------
   clear() {
     this.clearSingle();
+    this.clearAdditives();
+    this.clearUnloads();
   }
-  clearSingle() {
-    this._single = "";
-  }
+
   clearAdditives() {
     this.additives.length = 0;
   }
@@ -284,35 +290,31 @@ class ReservationStatus
     return 0 < this._unloads.length;
   }
 
-  hasSingleReservationNamed(sceneName:string) {
-    return this._single === sceneName;
+  //---------------------------------------------------------------------------
+  // Private メソッド
+  private clearSingle() {
+    this._single = "";
   }
 
-  hasAdditiveReservationNamed(sceneName:string) {
-    const found = this._additives.find((name) => {
-      return sceneName === name;
-    })
-    return found !== undefined;
-  }
-  hasUnloadReservationNamed(sceneName:string) {
-    const found = this._unloads.find((name) => {
-      return  sceneName === name;
-    })
-    return found !== name;
-  }
+  //---------------------------------------------------------------------------
+  // Private 変数
+  private _single:string;
+  private _additives:string[];
+  private _unloads:string[];
 }
 
 /******************************************************************************
  * アクティブシーン管理
  *****************************************************************************/
-class ActiveScenes {
-  private scenes: IActiveScene[];
-  private _main:IActiveScene|null;
-
+class ActiveScenes 
+{
   constructor() {
     this.scenes = [];
     this._main = null;
   }
+
+  //---------------------------------------------------------------------------
+  // Public プロパティ
 
   /** 
    * sScene.load(sceneName, singleMode)によってロードされたシーン
@@ -328,19 +330,8 @@ class ActiveScenes {
     })
   }
 
-
-
-  setMainBy(sceneName:string) {
-
-    const scene = this.getSceneBy(sceneName);
-
-    if (!scene) {
-      console.warn(`The scene of ${name} don't set to main scene.`);
-      return;
-    }
-
-    this._main = scene;
-  }
+  //---------------------------------------------------------------------------
+  // Public メソッド
 
   getSceneBy(sceneName:string) {
     const found = this.scenes.find((scene) => {
@@ -349,23 +340,27 @@ class ActiveScenes {
     return found;
   }
 
-  getSceneIndexBy(sceneName:string) {
-    const index = this.scenes.findIndex((active) => {
-      return active.name === sceneName;
-    });
-    return index;   
-  }
-
   has(sceneName:string) {
     return -1 !== this.getSceneIndexBy(sceneName);
   }
 
-  add(name:string, scene:uScene, requestSetMain = false) {
-    this.scenes.push({name, scene});
+  /** 
+   * アクティブなシーンリストにシーンを追加しつつ、要望があればメインシーンとしても設定する
+   */
+  add(name:string, scene:uScene, requestSetMain = false) 
+  {
+    // 名前とインスタンスで１セット
+    const activeScene = {name, scene};
+
+    this.scenes.push(activeScene);
 
     if (requestSetMain) {
-      this.setMainBy(name);
+      this._main = activeScene;
     }
+
+    // シーンのinitはメインシーンの設定のあとに呼ぶ
+    // そうしないとsceneのinitの中でメインシーンが他のシーンになってる可能性があるため
+    scene.init();
   }
 
   removeBy(sceneName:string) 
@@ -384,6 +379,25 @@ class ActiveScenes {
     });
     this.scenes.length = 0;
   }
+
+  //---------------------------------------------------------------------------
+  // Private メソッド
+
+  private getSceneIndexBy(sceneName:string) {
+    const index = this.scenes.findIndex((active) => {
+      return active.name === sceneName;
+    });
+    return index;   
+  }
+
+  //---------------------------------------------------------------------------
+  // Private 変数
+
+  /** アクティブなシーンのリスト */
+  private scenes: IActiveScene[];
+
+  /** メインのシーン、基本nullになっちゃいけない */
+  private _main:IActiveScene|null;
 
 }
 
