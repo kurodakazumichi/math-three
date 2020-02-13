@@ -1,10 +1,9 @@
 import uScene from '~/scripts/unit/scene/uScene';
-import sUnit from '~/scripts/system/sUnit';
 import sCamera from '~/scripts/system/sCamera';
 
 import uBox from '~/scripts/unit/primitive/uBox';
 import uGrid from '~/scripts/unit/primitive/uGrid';
-import { UNIT_LINE } from '~/scripts/define';
+import { UNIT_LINE } from '~/scripts/system/sUnit';
 
 import { LineBasicMaterial, BufferGeometry, Vector3, Line } from 'three';
 

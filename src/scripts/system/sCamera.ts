@@ -1,7 +1,7 @@
 import System from '~/scripts/system/System';
 import uCamera from '~/scripts/unit/camera/uCamera';
 import uOrbitCamera from '~/scripts/unit/camera/uOrbitCamera';
-import { UNIT_LINE } from '~/scripts/define';
+import { UNIT_LINE } from '~/scripts/system/sUnit';
 
 /******************************************************************************
  * カメラシステム

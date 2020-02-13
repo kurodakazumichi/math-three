@@ -1,20 +1,20 @@
 import System from '~/scripts/system/System';
 import uUnit from '~/scripts/unit/uUnit';
-import uScene from '../unit/scene/uScene';
 
 const LINE_COUNT = 10;
 
-export enum Line {
-  LINE0,
-  LINE1,
-  LINE2,
-  LINE3,
-  LINE4,
-  LINE5,
-  LINE6,
-  LINE7,
-  LINE8,
-  LINE9,
+export enum UNIT_LINE {
+  NONE      = -1,
+  SCENE     = 0,
+  CAMERA    = 1,
+  PRIMITIVE = 2,
+  LINE3     = 3,
+  LINE4     = 4,
+  LINE5     = 5,
+  LINE6     = 6,
+  LINE7     = 7,
+  LINE8     = 8,
+  LINE9     = 9,
 }
 
 /******************************************************************************
@@ -37,14 +37,14 @@ class sUnit extends System {
     this.lines[line].push(unit);
   }
 
-  remove(unit:uUnit) {
-    if (unit.unitLine < 0) return;
-    const found = this.lines[unit.unitLine].findIndex((u) => {
+  remove(unit:uUnit, lineNo:number) {
+    if (lineNo < 0) return;
+    const found = this.lines[lineNo].findIndex((u) => {
       return u === unit;
     })
     if (found ===  -1) return;
     
-    this.lines[unit.unitLine].splice(found, 1);
+    this.lines[lineNo].splice(found, 1);
   }
 
   update() {

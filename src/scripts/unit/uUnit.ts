@@ -1,5 +1,5 @@
 import { Object3D } from 'three';
-import sUnit from '~/scripts/system/sUnit';
+import sUnit, { UNIT_LINE } from '~/scripts/system/sUnit';
 import uScene from './scene/uScene';
 
 /******************************************************************************
@@ -13,71 +13,77 @@ import uScene from './scene/uScene';
  *****************************************************************************/
 export default class uUnit<T extends Object3D = Object3D> {
 
-  /**
-   * THREE.Object3D系列のインスタンスを保持する
-   */
-  private _obj:T|null;
-
-  unitLine:number = -1;
-
-  scene:uScene|null = null;
-
-  get obj() {
-    return this._obj as T;
-  }
-
   constructor(obj:T) {
     this._obj = obj;
   }
 
-  /**
-   * Object3Dにはないけど、独自に追加したいと思ったメソッドの定義
+  //---------------------------------------------------------------------------
+  // Public プロパティ
+  //---------------------------------------------------------------------------
+
+  /** 
+   * THREE.Object3Dインスタンス、システム内部で使用する用途で用意しているので
+   * アプリケーションからは基本使わない想定。
    */
+  get obj() {
+    return this._obj as T;
+  }
+
+  //---------------------------------------------------------------------------
+  // Public メソッド
+  //---------------------------------------------------------------------------
+
+  //---------------------------------------------------------------------------
+  // Object3Dにはないけど、独自に追加したいと思ったメソッドの定義
 
   /** 毎フレームコールされる更新処理 */
   update(){}
 
   /** sUnitとsceneに登録する */
-  entry(lineNo:number, scene:uScene|null = null) {
-
+  entry(lineNo:number, scene:uScene|null = null) 
+  {
     // 既に登録されてるかもしれないので一度exitする。
     this.exit();
 
+    // sUnitに登録する事で毎フレームupdateが呼ばれる
     sUnit.add(lineNo, this);
-    this.unitLine = lineNo;
+    this.belongingLineNo = lineNo;
 
+    // シーンに登録する事で描画される
     if(scene) {
-      this.scene = scene;
-      this.scene.add(this);
+      this.belongingScene = scene;
+      this.belongingScene.add(this);
     }
     return this;
   }
 
   /** sUnitとsceneから抜ける */
-  exit() {
-    sUnit.remove(this);
+  exit() 
+  {
+    sUnit.remove(this, this.belongingLineNo);
 
-    if(this.scene) {
-      this.scene.remove(this);
+    if(this.belongingScene) {
+      this.belongingScene.remove(this);
     }
-    this.unitLine = -1;
-    this.scene = null;
+    this.belongingLineNo = UNIT_LINE.NONE;
+    this.belongingScene = null;
     return this;
   }
 
   /** デストラクタに相等 */
   dispose() {
+    this.exit();
     this._obj = null;
-    this.scene = null;
-    sUnit.remove(this);
   }
 
-  /**
-   * 以下はObject3Dに定義されているメソッドやプロパティのラッパーを定義
-   */
+  //---------------------------------------------------------------------------
+  // 以下はObject3Dに定義されているメソッドやプロパティのラッパーを定義
 
   get position() {
     return this.obj.position;
+  }
+  get scale() {
+    return this.obj.scale;
   }
   get rotation()  {
     return this.obj.rotation;
@@ -98,5 +104,18 @@ export default class uUnit<T extends Object3D = Object3D> {
     this.obj.remove(...objects);
     return this;
   }
+
+  //---------------------------------------------------------------------------
+  // Private 変数
+  //---------------------------------------------------------------------------
+  /** THREE.Object3D系列のインスタンスを保持する */
+  private _obj:T|null;
+
+  /** 所属するsUnitのLINE番号 */
+  private belongingLineNo:number = UNIT_LINE.NONE;
+
+  /** 所属するシーン */
+  private belongingScene:uScene|null = null;
+
 
 }

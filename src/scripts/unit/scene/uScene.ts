@@ -17,7 +17,6 @@ export default class uScene extends uUnit<Scene> {
   add<T extends Object3D>(...units:uUnit<T>[]) {
     super.add(...units);
     units.map((unit) => {
-      unit.scene = this;
       this.units.push(unit);
     })
     return this;
